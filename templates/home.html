@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Home</h1>
-    <p>Welcome to the home page</p>
+    <div class="px-4 py-5 my-5 text-center">
+        <h1 class="display-5 fw-bold">Shorten a link</h1>
+        <form class="col-lg-6 mx-auto" method="POST" name="shorten" action="/shorten">
+            <label for="url" class="visually-hidden">Enter a URL to shorten</label>
+            <input type="text" id="url" class="form-control" placeholder="Enter a URL to shorten" required autofocus>
+            <button class="w-100 btn btn-lg btn-primary my-4" type="submit">Shorten</button>
+        </form>
+    </div>
 {% endblock %}

@@ -25,7 +25,7 @@ def login(request):
         if user is not None:
             auth_login(request, user)
             print('logged in')
-            return render(request, 'home.html')
+            return redirect('home')
         else:
             print('user is none')
             return render(request, 'login.html', {'error': 'Invalid email or password'})
@@ -40,7 +40,7 @@ def signup(request):
             hashed_pass = make_password(form.cleaned_data['password'])
             new_user = User(email=form.cleaned_data['email'], username=form.cleaned_data['email'], password=hashed_pass)
             new_user.save()
-            return redirect('login')
+            return render(request, 'login')
 
     return render(request, 'signup.html', {'form': form})
 
