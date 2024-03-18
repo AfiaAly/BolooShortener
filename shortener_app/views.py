@@ -58,7 +58,7 @@ def signup(request):
             hashed_pass = make_password(form.cleaned_data['password'])
             new_user = User(email=form.cleaned_data['email'], username=form.cleaned_data['email'], password=hashed_pass)
             new_user.save()
-            return render(request, 'login')
+            return render(request, 'login.html')
 
     return render(request, 'signup.html', {'form': form})
 
