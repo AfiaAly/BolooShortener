@@ -8,7 +8,7 @@
             <input type="text" id="url" class="form-control" placeholder="Enter a URL to shorten" required autofocus>
             <button class="w-100 btn btn-lg btn-primary my-4" type="button" onclick="send_ajax_call()">Shorten</button>
         </form>
-        
+
         <a class="btn btn-secondary w-80" href="{% url 'manage' %}">View my URLs</a>
     </div>
 
@@ -30,7 +30,19 @@
                     title: 'Shortened URL',
                     text: response.short_url,
                     icon: 'success',
-                    confirmButtonText: 'Close'
+                    confirmButtonText: 'Copy',
+                    showCancelButton: true,
+                    cancelButtonText: 'Close',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        navigator.clipboard.writeText(response.short_url);
+                        Swal.fire({
+                            title: 'Copied!',
+                            text: 'The shortened URL has been copied to your clipboard',
+                            icon: 'success',
+                            confirmButtonText: 'Close'
+                        })
+                    }
                 })
             },
             error: function (response) {

@@ -90,7 +90,7 @@ class Shorten(APIView):
         url = request.data['url']
         if not url:
             return Response({'error': 'URL is required'}, status=400)
-        if not url.startswith('http') or url.startswith('https'):
+        if not (url.startswith('http') or url.startswith('https')):
             url = f'http://{url}'
 
         # Create randomised string of 8 characters
