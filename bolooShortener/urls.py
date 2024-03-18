@@ -27,4 +27,5 @@ urlpatterns = [
     path('shorten/', shortener_views.Shorten.as_view(), name='shorten'),
     path('manage/', shortener_views.manage, name='manage'),
     path('delete/', shortener_views.Delete.as_view(), name='delete'),
+    path('<str:short_url>/', shortener_views.redirect_link, name='redirect'),
 ]

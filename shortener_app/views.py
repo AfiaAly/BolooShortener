@@ -6,7 +6,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from shortener_app.forms import SignUpForm
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.models import User
@@ -66,6 +66,23 @@ def manage(request):
     return render(request, 'manage.html', {'links': links})
 
 
+
+def redirect_link(request, short_url):
+    try:
+        # Get the ShortenedURL object with the given short_url
+        url = Links.objects.get(short_link=f'http://localhost:8000/{short_url}')
+    except:
+        return render(request, '404.html')
+
+    # Increment the visit count
+    url.visit_count += 1
+    url.save(update_fields=['visit_count'])
+    going_to = url.original_link
+    print(f'redirecting to {going_to}')
+    # Redirect to the original URL
+    return redirect(going_to)
+
+
 class Shorten(APIView):
     def post(self, request):
         if not request.user.is_authenticated:
@@ -73,6 +90,8 @@ class Shorten(APIView):
         url = request.data['url']
         if not url:
             return Response({'error': 'URL is required'}, status=400)
+        if not url.startswith('http') or url.startswith('https'):
+            url = f'http://{url}'
 
         # Create randomised string of 8 characters
         key = secrets.token_hex(4)
