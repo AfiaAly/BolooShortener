@@ -1,3 +1,7 @@
+import secrets
+import traceback
+
+from rest_framework.views import APIView
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
@@ -7,6 +11,10 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
+from shortener_app.models import Links
+from rest_framework.response import Response
+
+import traceback
 
 def splash(request):
     return render(request, 'splash.html')
@@ -44,3 +52,28 @@ def signup(request):
 
     return render(request, 'signup.html', {'form': form})
 
+
+class Shorten(APIView):
+    def post(self, request):
+        if not request.user.is_authenticated:
+            return Response({'error': 'Not authenticated'}, status=401)
+        url = request.data['url']
+        if not url:
+            return Response({'error': 'URL is required'}, status=400)
+
+        # Create randomised string of 8 characters
+        key = secrets.token_hex(4)
+        short_url = f'http://localhost:8000/{key}'
+
+        # Save the short URL to the database
+        try:
+            link = Links(original_link=url, short_link=short_url, created_by=request.user)
+            link.save()
+        except Exception as e:
+            if 'unique constraint' in str(e):
+                return Response({'error': 'Short URL already exists'}, status=400)
+            else:
+                return Response({'error': 'An error occurred'}, status=400)
+
+
+        return Response({'short_url': short_url}, status=200)

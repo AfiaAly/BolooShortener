@@ -24,4 +24,5 @@ urlpatterns = [
     path('home/', shortener_views.home, name='home'),
     path('login/', shortener_views.login, name='login'),
     path('signup/', shortener_views.signup, name='signup'),
+    path('shorten/', shortener_views.Shorten.as_view(), name='shorten'),
 ]

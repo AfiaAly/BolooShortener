@@ -16,6 +16,8 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     {#    Import custom JS#}
     <script src="{% static 'js/script.js' %}"></script>
+    {#    Import Swal2 #}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     {% block head %}
     {% endblock %}
 </head>
@@ -23,4 +25,6 @@
 {% block content %}
 {% endblock %}
 </body>
+{% block script %}
+{% endblock %}
 </html>
