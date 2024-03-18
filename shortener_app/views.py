@@ -13,6 +13,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 from shortener_app.models import Links
 from rest_framework.response import Response
+from django.db import IntegrityError
 
 import traceback
 
@@ -69,11 +70,11 @@ class Shorten(APIView):
         try:
             link = Links(original_link=url, short_link=short_url, created_by=request.user)
             link.save()
+        except IntegrityError:
+            return Response({'error': 'Short URL already exists'}, status=400)
         except Exception as e:
-            if 'unique constraint' in str(e):
-                return Response({'error': 'Short URL already exists'}, status=400)
-            else:
-                return Response({'error': 'An error occurred'}, status=400)
+            traceback.print_exc()
+            return Response({'error': 'An error occurred'}, status=400)
 
 
         return Response({'short_url': short_url}, status=200)
