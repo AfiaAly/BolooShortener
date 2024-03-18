@@ -2,6 +2,7 @@
 
 {% block content %}
     <div class="px-4 py-5 my-5 text-center">
+        <h1 class="display-5 fw-bold mb-5">Your shortened URLs</h1>
         <table class="table">
             <thead>
                 <tr>
@@ -18,14 +19,47 @@
                         <td><a href="{{ link.short_link }}">{{ link.short_link }}</a></td>
                         <td>{{ link.visit_count }}</td>
                         <td>
-                            <form action="{% url 'delete' link.id %}" method="post">
-                                <button type="submit" class="btn btn-danger">Delete</button>
-                            </form>
+                            <button type="button" class="btn btn-danger" onclick="send_ajax_delete({{ link.id }})">Delete</button>
                         </td>
                     </tr>
                 {% endfor %}
             </tbody>
-
+        </table>
+    </div>
 
 
 {% endblock %}
+{% block script %}
+    <script>
+        function send_ajax_delete(id) {
+            $.ajax({
+                url: "/delete/",
+                type: 'POST',
+                data: {
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    'id': id
+                },
+                success: function (data) {
+                    Swal.fire({
+                        title: 'Shortened URL',
+                        text: data.message,
+                        icon: 'success',
+                        confirmButtonText: 'Close',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            location.reload();
+                        }
+                    });
+                },
+                error: function (data) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Something went wrong!',
+                        text: data.responseJSON.error,
+                    })
+                }
+            });
+        }
+    </script>
+{% endblock %}
+```

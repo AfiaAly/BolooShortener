@@ -88,15 +88,19 @@ class Shorten(APIView):
             traceback.print_exc()
             return Response({'error': 'An error occurred'}, status=400)
 
-
         return Response({'short_url': short_url}, status=200)
 
 
 class Delete(APIView):
     def post(self, request):
-        link_id = request.data['link_id']
+        if not request.user.is_authenticated:
+            return Response({'error': 'Not authenticated'}, status=401)
+
+        link_id = request.data['id']
         try:
             link = Links.objects.get(id=link_id)
+            if link.created_by != request.user:
+                return Response({'error': 'Unauthorized'}, status=401)
             link.delete()
         except:
             traceback.print_exc()
