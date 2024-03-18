@@ -11,17 +11,22 @@
     {#    Import jQuery#}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     {#    Import FontAwesome#}
-    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/54a8dea476.js" crossorigin="anonymous"></script>
     {#    Import custom CSS#}
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+{#    <link rel="stylesheet" href="{% static 'css/style.css' %}">#}
     {#    Import custom JS#}
-    <script src="{% static 'js/script.js' %}"></script>
+{#    <script src="{% static 'js/script.js' %}"></script>#}
     {#    Import Swal2 #}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     {% block head %}
     {% endblock %}
 </head>
 <body>
+{% block header %}
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand mx-2" href="{% url 'home' %}"><i class="fas fa-home" style="margin-right: 5px"></i>Boloo</a>
+    </nav>
+{% endblock %}
 {% block content %}
 {% endblock %}
 </body>
