@@ -25,4 +25,6 @@ urlpatterns = [
     path('login/', shortener_views.login, name='login'),
     path('signup/', shortener_views.signup, name='signup'),
     path('shorten/', shortener_views.Shorten.as_view(), name='shorten'),
+    path('manage/', shortener_views.manage, name='manage'),
+    path('delete/<link_id>', shortener_views.Delete.as_view(), name='delete'),
 ]

@@ -54,6 +54,18 @@ def signup(request):
     return render(request, 'signup.html', {'form': form})
 
 
+@login_required
+def manage(request):
+    user = request.user
+    links = Links.objects.filter(created_by=user)
+    if request.method == 'POST':
+        link_id = request.POST.get('link_id')
+        link = Links.objects.get(id=link_id)
+        link.delete()
+        return redirect('manage')
+    return render(request, 'manage.html', {'links': links})
+
+
 class Shorten(APIView):
     def post(self, request):
         if not request.user.is_authenticated:
@@ -78,3 +90,16 @@ class Shorten(APIView):
 
 
         return Response({'short_url': short_url}, status=200)
+
+
+class Delete(APIView):
+    def post(self, request):
+        link_id = request.data['link_id']
+        try:
+            link = Links.objects.get(id=link_id)
+            link.delete()
+        except:
+            traceback.print_exc()
+            return Response({'error': 'An error occurred'}, status=400)
+
+        return Response({'message': 'Link deleted'}, status=200)
