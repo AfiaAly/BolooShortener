@@ -9,6 +9,7 @@ from shortener_app.forms import SignUpForm
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
+from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 from shortener_app.models import Links
@@ -39,6 +40,14 @@ def login(request):
             print('user is none')
             return render(request, 'login.html', {'error': 'Invalid email or password'})
     return render(request, 'login.html')
+
+
+def logout(request):
+    '''Logout the user and redirect to the splash page'''
+    user = request.user
+    if user.is_authenticated:
+        auth_logout(request)
+    return redirect('splash')
 
 
 def signup(request):

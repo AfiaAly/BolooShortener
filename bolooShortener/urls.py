@@ -23,6 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('home/', shortener_views.home, name='home'),
     path('login/', shortener_views.login, name='login'),
+    path('logout/', shortener_views.logout, name='logout'),
     path('signup/', shortener_views.signup, name='signup'),
     path('shorten/', shortener_views.Shorten.as_view(), name='shorten'),
     path('manage/', shortener_views.manage, name='manage'),
