@@ -19,6 +19,9 @@ from django.urls import path
 from shortener_app import views as shortener_views
 
 urlpatterns = [
+    path('', shortener_views.splash, name='splash'),
     path('admin/', admin.site.urls),
-    path('home/', shortener_views.home),
+    path('home/', shortener_views.home, name='home'),
+    path('login/', shortener_views.login, name='login'),
+    path('signup/', shortener_views.signup, name='signup'),
 ]

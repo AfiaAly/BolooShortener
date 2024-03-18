@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <form method="POST" action="" class="m-1">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="username">Email</label>
+            <input type="text" class="form-control" id="email" name="email" placeholder="Enter your email address" required>
+        </div>
+
+        <br>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+        </div>
+
+        <br>
+
+        <button type="submit" class="btn btn-primary">Login</button>
+        <a href="{% url 'splash' %}" class="btn btn-secondary">Cancel</a>
+
+        {% if errors %}
+            <div class="alert alert-danger mt-3" role="alert">
+                {{ errors }}
+            </div>
+        {% endif %}
+    </form>
+
+{% endblock %}
