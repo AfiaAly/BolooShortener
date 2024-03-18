@@ -102,6 +102,26 @@ class Shorten(APIView):
         if not (url.startswith('http') or url.startswith('https')):
             url = f'http://{url}'
 
+        custom_short_url = request.data.get('custom_url')
+        if custom_short_url:
+            link_with_domain = f'http://localhost:8000/{custom_short_url}'
+            print(f'Checking if {link_with_domain} exists')
+            if (Links.objects.filter(short_link=link_with_domain).exists()):
+                return Response({'error': 'The chosen short URL is already in use'}, status=400)
+
+            short_url = f'http://localhost:8000/{custom_short_url}'
+            try:
+                link = Links(original_link=url, short_link=short_url, created_by=request.user)
+                link.save()
+            except IntegrityError:
+                traceback.print_exc()
+                return Response({'error': 'The given link has been shortened before'}, status=400)
+            except Exception as e:
+                traceback.print_exc()
+                return Response({'error': 'An error occurred'}, status=400)
+
+            return Response({'short_url': short_url}, status=200)
+
         # Create randomised string of 8 characters
         key = secrets.token_hex(4)
         short_url = f'http://localhost:8000/{key}'
@@ -111,7 +131,7 @@ class Shorten(APIView):
             link = Links(original_link=url, short_link=short_url, created_by=request.user)
             link.save()
         except IntegrityError:
-            return Response({'error': 'Short URL already exists'}, status=400)
+            return Response({'error': 'The given link has been shortened before'}, status=400)
         except Exception as e:
             traceback.print_exc()
             return Response({'error': 'An error occurred'}, status=400)
